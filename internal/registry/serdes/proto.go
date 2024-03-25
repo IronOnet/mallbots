@@ -19,7 +19,7 @@ var protoT = reflect.TypeOf((*proto.Message)(nil)).Elem()
 
 func (c ProtoSerde) Register(v registry.Registrable, options ...registry.BuildOption) error {
 	if !reflect.TypeOf(v).Implements(protoT) {
-		return fmt.Errorf("%T does not implement proto.Message")
+		return fmt.Errorf("%T does not implement proto.Message", v)
 	}
 	return registry.Register(c.r, v, c.serialize, c.deserialize, options)
 }
