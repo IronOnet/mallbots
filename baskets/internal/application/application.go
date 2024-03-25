@@ -60,12 +60,13 @@ type (
 
 var _ App = (*Application)(nil)
 
-func New(baskets domain.BasketRepository, stores domain.StoreRepository, products domain.ProductRepository, orders domain.OrderRepository) *Application{
+func New(baskets domain.BasketRepository, stores domain.StoreRepository, products domain.ProductRepository, orders domain.OrderRepository, domainPublisher ddd.EventPublisher) *Application{
 	return &Application{
 		baskets: baskets,
 		stores: stores,
 		products: products,
 		orders: orders,
+		domainPublisher: domainPublisher,
 	}
 }
 

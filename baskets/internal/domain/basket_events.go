@@ -1,33 +1,33 @@
 package domain
 
-type BasketStarted struct{
+type BasketStarted struct {
 	Basket *Basket
 }
 
-func (BasketStarted) EventName() string{ return "baskets.BasketStarted"}
+func (BasketStarted) EventName() string { return "baskets.BasketStarted" }
 
-type BasketItemAdded struct{
+type BasketItemAdded struct {
 	Basket *Basket
-	Item Item
+	Item   Item
 }
 
-func (BasketItemAdded) EventName() string { return "baskets.BasketItemAdded"}
+func (BasketItemAdded) EventName() string { return "baskets.BasketItemAdded" }
 
-type BasketItemRemoved struct{
+type BasketItemRemoved struct {
 	Basket *Basket
-	Item Item
+	Item   Item
 }
 
 func (BasketItemRemoved) EventName() string { return "baskets.BasketItemRemoved" }
 
-type BasketCanceled struct{
+type BasketCanceled struct {
 	Basket *Basket
 }
 
 func (BasketCanceled) EventName() string { return "baskets.BasketCancelled" }
 
-type BasketCheckout struct{
+type BasketCheckedOut struct {
 	Basket *Basket
 }
 
-func (BasketCheckout) EventName() string { return "baskets.BasketCheckout" }
+func (BasketCheckedOut) EventName() string { return "baskets.BasketCheckout" }
