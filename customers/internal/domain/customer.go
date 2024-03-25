@@ -31,7 +31,9 @@ func RegisterCustomer(id, name ,smsNumber string) (*Customer, error){
 	}
 
 	return &Customer{
-		ID: id,
+		AggregateBase: ddd.AggregateBase{
+			ID: id,
+		},
 		Name: name,
 		SmsNumber: smsNumber,
 		Enabled: true,

@@ -3,7 +3,7 @@ package customers
 import (
 	"context"
 
-	"github.com/irononet/mallbots/customers/application"
+	"github.com/irononet/mallbots/customers/internal/application"
 	"github.com/irononet/mallbots/customers/internal/grpc"
 	"github.com/irononet/mallbots/customers/internal/logging"
 	"github.com/irononet/mallbots/customers/internal/postgres"
