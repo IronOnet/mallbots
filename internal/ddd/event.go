@@ -12,6 +12,7 @@ type (
 	EventPayload interface{}
 
 	Event interface{
+		IDer
 		EventName() string
 		Payload() EventPayload
 		Metadata() Metadata
