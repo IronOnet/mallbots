@@ -16,7 +16,7 @@ type (
 	Registry interface {
 		Serialize(key string, v any) ([]byte, error)
 		Build(key string, options ...BuildOption) (interface{}, error)
-		Deserialize(key string, fn func() any, s Serializer, d Deserializer, o []BuildOption) error
+		Deserialize(key string, fn func() any, s Serializer, d Deserializer, o []BuildOption) (any , error)
 		register(key string, fn func() any, s Serializer, d Deserializer, o []BuildOption) error
 	}
 )
