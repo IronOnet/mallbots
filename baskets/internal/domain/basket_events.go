@@ -1,33 +1,41 @@
 package domain
 
+const (
+	BasketStartedEvent     = "baskets.BasketStarted"
+	BasketItemAddedEvent   = "baskets.BasketItemAdded"
+	BasketItemRemovedEvent = "baskets.BasketItemRemoved"
+	BasketCanceledEvent    = "baskets.BasketCanceled"
+	BasketCheckedOutEvent  = "baskets.BasketCheckedOut"
+)
+
 type BasketStarted struct {
-	Basket *Basket
+	CustomerID string
 }
 
 func (BasketStarted) EventName() string { return "baskets.BasketStarted" }
 
 type BasketItemAdded struct {
-	Basket *Basket
-	Item   Item
+	Item Item
 }
 
 func (BasketItemAdded) EventName() string { return "baskets.BasketItemAdded" }
 
 type BasketItemRemoved struct {
-	Basket *Basket
-	Item   Item
+	ProductID string
+	Quantity  int
 }
 
 func (BasketItemRemoved) EventName() string { return "baskets.BasketItemRemoved" }
 
 type BasketCanceled struct {
-	Basket *Basket
 }
 
 func (BasketCanceled) EventName() string { return "baskets.BasketCancelled" }
 
 type BasketCheckedOut struct {
-	Basket *Basket
+	PaymentID  string
+	CustomerID string
+	Items      map[string]Item
 }
 
 func (BasketCheckedOut) EventName() string { return "baskets.BasketCheckout" }
