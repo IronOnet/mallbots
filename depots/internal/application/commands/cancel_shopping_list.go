@@ -13,10 +13,10 @@ type CancelShoppingList struct {
 
 type CancelShoppingListHandler struct {
 	shoppingLists   domain.ShoppingListRepository
-	domainPublisher ddd.EventPublisher
+	domainPublisher ddd.EventPublisher[ddd.AggregateEvent]
 }
 
-func NewCancelShoppingListHandler(shoppingLists domain.ShoppingListRepository, domainPublisher ddd.EventPublisher) CancelShoppingListHandler {
+func NewCancelShoppingListHandler(shoppingLists domain.ShoppingListRepository, domainPublisher ddd.EventPublisher[ddd.AggregateEvent]) CancelShoppingListHandler {
 	return CancelShoppingListHandler{
 		shoppingLists:   shoppingLists,
 		domainPublisher: domainPublisher,
@@ -39,7 +39,7 @@ func (h CancelShoppingListHandler) CancelShoppingList(ctx context.Context, cmd C
 	}
 
 	// Publish domain events
-	if err = h.domainPublisher.Publish(ctx, list.GetEvents()...); err != nil {
+	if err = h.domainPublisher.Publish(ctx, list.Events()...); err != nil {
 		return err
 	}
 

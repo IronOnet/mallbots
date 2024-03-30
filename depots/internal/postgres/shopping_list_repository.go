@@ -9,7 +9,6 @@ import (
 	"github.com/stackus/errors"
 
 	"github.com/irononet/mallbots/depots/internal/domain"
-	"github.com/irononet/mallbots/internal/ddd"
 )
 
 type ShoppingListRepository struct {
@@ -50,7 +49,6 @@ func (r ShoppingListRepository) Find(ctx context.Context, id string) (*domain.Sh
 
 	return shoppingList, nil
 }
-
 
 func (r ShoppingListRepository) Save(ctx context.Context, list *domain.ShoppingList) error {
 	const query = "INSERT INTO %s (id, order_id, stops, assigned_bot_id, status) VALUES ($1, $2, $3, $4, $5)"
