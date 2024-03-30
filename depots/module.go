@@ -14,35 +14,36 @@ import (
 
 type Module struct{}
 
-func (Module) Startup(ctx context.Context, mono monolith.Monolith) error{
+func (Module) Startup(ctx context.Context, mono monolith.Monolith) error {
 	// Setup driven adapters
-	domainDispatcher := ddd.NewEventDispatcher()
+	domainDispatcher := ddd.NewEventDispatcher[ddd.AggregateEvent]()
 	shoppingLists := postgres.NewShoppingListRepository("depot.shopping_lists", mono.DB())
 	conn, err := grpc.Dial(ctx, mono.Config().Rpc.Address())
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	stores := grpc.NewStoreRepository(conn)
 	products := grpc.NewProductRepository(conn)
 	orders := grpc.NewOrderRepository(conn)
 
-	// Setup application 
+	// Setup application
 	app := logging.LogApplicationAccess(application.New(shoppingLists, stores, products, domainDispatcher),
-	mono.Logger())
+		mono.Logger())
 
-	orderHandlers := logging.LogDomainEventHandlerAccess(
+	orderHandlers := logging.LogEventHandlerAccess[ddd.AggregateEvent](
 		application.NewOrderHandlers(orders),
+		"Order", 
 		mono.Logger(),
 	)
 
 	// setup Driver adapters
-	if err := grpc.Register(ctx, app, mono.RPC()); err != nil{
+	if err := grpc.Register(ctx, app, mono.RPC()); err != nil {
 		return err
 	}
-	if err := rest.RegisterGatway(ctx, mono.Mux(), mono.Config().Rpc.Address()); err != nil{
+	if err := rest.RegisterGatway(ctx, mono.Mux(), mono.Config().Rpc.Address()); err != nil {
 		return err
 	}
-	if err := rest.RegisterSwagger(mono.Mux()); err != nil{
+	if err := rest.RegisterSwagger(mono.Mux()); err != nil {
 		return err
 	}
 
