@@ -28,9 +28,9 @@ func RegisterServer(app application.App, registrar grpc.ServiceRegistrar) error{
 func (s server) CreateOrder(ctx context.Context, request *orderingpb.CreateOrderRequest) (*orderingpb.CreateOrderResponse, error){
 	id := uuid.New().String()
 
-	items := make([]*domain.Item, 0, len(request.Items))
-	for _, item := range request.Items{
-		items = append(items, s.itemToDomain(item))
+	items := make([]domain.Item,  len(request.Items))
+	for i, item := range request.Items{
+		items[i] = s.itemToDomain(item)
 	}
 
 	err := s.app.CreateOrder(ctx, commands.CreateOrder{
@@ -77,7 +77,7 @@ func (s server) orderFromDomain(order *domain.Order) *orderingpb.Order{
 	}
 
 	return &orderingpb.Order{
-		Id: order.ID,
+		Id: order.ID(),
 		CustomerId: order.CustomerID,
 		PaymentId: order.PaymentID,
 		Items: items,
@@ -85,8 +85,8 @@ func (s server) orderFromDomain(order *domain.Order) *orderingpb.Order{
 	}
 }
 
-func (s server) itemToDomain(item *orderingpb.Item) *domain.Item{
-	return &domain.Item{
+func (s server) itemToDomain(item *orderingpb.Item) domain.Item{
+	return domain.Item{
 		ProductID: item.GetProductId(),
 		StoreID: item.GetStoreId(),
 		StoreName: item.GetStoreName(),
@@ -96,7 +96,7 @@ func (s server) itemToDomain(item *orderingpb.Item) *domain.Item{
 	}
 }
 
-func (s server) itemFromDomain(item *domain.Item) *orderingpb.Item{
+func (s server) itemFromDomain(item domain.Item) *orderingpb.Item{
 	return &orderingpb.Item{
 		StoreId: item.StoreID,
 		ProductId: item.ProductID,
