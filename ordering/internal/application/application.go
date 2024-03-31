@@ -3,7 +3,7 @@ package application
 import (
 	"context"
 
-	"github.com/irononet/mallbots/internal/ddd"
+	
 	"github.com/irononet/mallbots/ordering/internal/application/commands"
 	"github.com/irononet/mallbots/ordering/internal/application/queries"
 	"github.com/irononet/mallbots/ordering/internal/domain"
@@ -46,14 +46,14 @@ type (
 var _ App = (*Application)(nil)
 
 func New(orders domain.OrderRepository, customers domain.CustomerRepository, payments domain.PaymentRepository,
-	shopping domain.ShoppingRepository, domainPublisher ddd.EventPublisher,
+	shopping domain.ShoppingRepository,
 ) *Application{
 	return &Application{
 		appCommands: appCommands{
-			CreateOrderHandler: commands.NewCreateOrderHandler(orders, customers, payments, shopping, domainPublisher),
-			CancelOrderHandler: commands.NewCancelOrderHandler(orders, shopping, domainPublisher),
-			ReadyOrderHandler: commands.NewReadyOrderHandler(orders, domainPublisher),
-			CompleteOrderHandler: commands.NewCompleteOrderHandler(orders, domainPublisher),
+			CreateOrderHandler: commands.NewCreateOrderHandler(orders, customers, payments, shopping),
+			CancelOrderHandler: commands.NewCancelOrderHandler(orders, shopping),
+			ReadyOrderHandler: commands.NewReadyOrderHandler(orders),
+			CompleteOrderHandler: commands.NewCompleteOrderHandler(orders),
 		},
 		appQueries : appQueries{
 			GetOrderHandler: queries.NewGetOrderHandler(orders),

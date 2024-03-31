@@ -5,7 +5,7 @@ import (
 
 	"github.com/stackus/errors"
 	
-	"github.com/irononet/mallbots/internal/ddd"
+	
 	"github.com/irononet/mallbots/ordering/internal/domain"
 )
 
@@ -13,7 +13,7 @@ type CreateOrder struct{
 	ID string
 	CustomerID string
 	PaymentID string
-	Items []*domain.Item
+	Items []domain.Item
 }
 
 type CreateOrderHandler struct{
@@ -21,23 +21,21 @@ type CreateOrderHandler struct{
 	customers domain.CustomerRepository
 	payments domain.PaymentRepository
 	shopping domain.ShoppingRepository
-	domainPublisher ddd.EventPublisher
 }
 
-func NewCreateOrderHandler(orders domain.OrderRepository, customers domain.CustomerRepository, payments domain.PaymentRepository, shopping domain.ShoppingRepository, domainPublisher ddd.EventPublisher) CreateOrderHandler{
+func NewCreateOrderHandler(orders domain.OrderRepository, customers domain.CustomerRepository, payments domain.PaymentRepository, shopping domain.ShoppingRepository) CreateOrderHandler{
 	return CreateOrderHandler{
 		orders: orders,
 		customers: customers,
 		payments: payments,
 		shopping: shopping,
-		domainPublisher: domainPublisher,
 	}
 }
 
 func (h CreateOrderHandler) CreateOrder(ctx context.Context, cmd CreateOrder) error{
-	order, err := domain.CreateOrder(cmd.ID, cmd.CustomerID, cmd.PaymentID, cmd.Items)
+	order, err := h.orders.Load(ctx, cmd.ID)
 	if err != nil{
-		return errors.Wrap(err, "create order command")
+		return err
 	}
 
 	// AuthorizeCustomer
@@ -49,7 +47,7 @@ func (h CreateOrderHandler) CreateOrder(ctx context.Context, cmd CreateOrder) er
 		return errors.Wrap(err, "order payment confirmation")
 	}
 
-	if order.ShoppingID, err = h.shopping.Create(ctx, order); err != nil{
+	if order.ShoppingID, err = h.shopping.Create(ctx, cmd.ID, cmd.Items); err != nil{
 		return errors.Wrap(err, "order shopping scheduling")
 	}
 
@@ -58,10 +56,6 @@ func (h CreateOrderHandler) CreateOrder(ctx context.Context, cmd CreateOrder) er
 		return errors.Wrap(err, "order creation")
 	}
 
-	// Publish domain events
-	if err = h.domainPublisher.Publish(ctx, order.GetEvents()...); err != nil{
-		return err
-	}
 
 	return nil
 }

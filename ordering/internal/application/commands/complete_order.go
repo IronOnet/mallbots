@@ -3,7 +3,6 @@ package commands
 import (
 	"context"
 
-	"github.com/irononet/mallbots/internal/ddd"
 	"github.com/irononet/mallbots/ordering/internal/domain"
 )
 
@@ -14,18 +13,16 @@ type CompleteOrder struct {
 
 type CompleteOrderHandler struct {
 	orders          domain.OrderRepository
-	domainPublisher ddd.EventPublisher
 }
 
-func NewCompleteOrderHandler(orders domain.OrderRepository, domainPublisher ddd.EventPublisher) CompleteOrderHandler {
+func NewCompleteOrderHandler(orders domain.OrderRepository) CompleteOrderHandler {
 	return CompleteOrderHandler{
 		orders:          orders,
-		domainPublisher: domainPublisher,
 	}
 }
 
 func (h CompleteOrderHandler) CompleteOrder(ctx context.Context, cmd CompleteOrder) error{
-	order, err := h.orders.Find(ctx, cmd.ID)
+	order, err := h.orders.Load(ctx, cmd.ID)
 	if err != nil{
 		return err
 	}
@@ -35,10 +32,7 @@ func (h CompleteOrderHandler) CompleteOrder(ctx context.Context, cmd CompleteOrd
 		return err
 	}
 
-	// Publish domain events
-	if err = h.domainPublisher.Publish(ctx, order.GetEvents()...); err != nil{
-		return err
-	}
+	
 
 	return nil
 }
