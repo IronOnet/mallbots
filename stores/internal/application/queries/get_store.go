@@ -1,4 +1,4 @@
-package queries 
+package queries
 
 import (
 	"context"
@@ -6,20 +6,20 @@ import (
 	"github.com/irononet/mallbots/stores/internal/domain"
 )
 
-type GetStore struct{
+type GetStore struct {
 	ID string
 }
 
-type GetStoreHandler struct{
-	stores domain.StoreRepository
+type GetStoreHandler struct {
+	mall domain.MallRepository
 }
 
-func NewGetStoreHandler(stores domain.StoreRepository) GetStoreHandler{
+func NewGetStoreHandler(mall domain.MallRepository) GetStoreHandler {
 	return GetStoreHandler{
-		stores: stores,
+		mall: mall,
 	}
 }
 
-func (h GetStoreHandler) GetStore(ctx context.Context, query GetStore) (*domain.Store, error){
-	return h.stores.Find(ctx, query.ID)
+func (h GetStoreHandler) GetStore(ctx context.Context, query GetStore) (*domain.MallStore, error) {
+	return h.mall.Find(ctx, query.ID)
 }

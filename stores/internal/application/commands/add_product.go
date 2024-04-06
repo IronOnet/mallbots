@@ -5,7 +5,6 @@ import (
 
 	"github.com/stackus/errors"
 
-	"github.com/irononet/mallbots/internal/ddd"
 	"github.com/irononet/mallbots/stores/internal/domain"
 )
 
@@ -19,37 +18,19 @@ type AddProduct struct {
 }
 
 type AddProductHandler struct {
-	stores          domain.StoreRepository
 	products        domain.ProductRepository
-	domainPublisher ddd.EventPublisher
 }
 
-func NewAddProductHandler(stores domain.StoreRepository, products domain.ProductRepository, domainPublisher ddd.EventPublisher) AddProductHandler {
+func NewAddProductHandler(products domain.ProductRepository) AddProductHandler {
 	return AddProductHandler{
-		stores:          stores,
 		products:        products,
-		domainPublisher: domainPublisher,
 	}
 }
 
 func (h AddProductHandler) AddProduct(ctx context.Context, cmd AddProduct) error {
-	if _, err := h.stores.Find(ctx, cmd.StoreID); err != nil {
-		return errors.Wrap(err, "error adding product")
-	}
-
 	product, err := domain.CreateProduct(cmd.ID, cmd.StoreID, cmd.Name, cmd.Description, cmd.SKU, cmd.Price)
-	if err != nil {
+	if err != nil{
 		return errors.Wrap(err, "error adding product")
 	}
-
-	if err = h.products.Save(ctx, product); err != nil {
-		return errors.Wrap(err, "err adding product")
-	}
-
-	// publish domain events
-	if err = h.domainPublisher.Publish(ctx, product.GetEvents()...); err != nil {
-		return err
-	}
-
-	return nil
+	return errors.Wrap(h.products.Save(ctx, product), "error adding product")
 }

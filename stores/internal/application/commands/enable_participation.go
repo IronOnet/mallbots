@@ -3,8 +3,6 @@ package commands
 import (
 	"context"
 
-	
-	"github.com/irononet/mallbots/internal/ddd"
 	"github.com/irononet/mallbots/stores/internal/domain"
 )
 
@@ -14,18 +12,16 @@ type EnableParticipation struct{
 
 type EnableParticipationHandler struct{
 	stores domain.StoreRepository
-	domainPublisher ddd.EventPublisher
 }
 
-func NewEnableParticipationHanler(stores domain.StoreRepository, domainPublisher ddd.EventPublisher) EnableParticipationHandler{
+func NewEnableParticipationHanler(stores domain.StoreRepository) EnableParticipationHandler{
 	return EnableParticipationHandler{
 		stores: stores,
-		domainPublisher: domainPublisher,
 	}
 }
 
 func (h EnableParticipationHandler) EnableParticipation(ctx context.Context, cmd EnableParticipation) error{
-	store, err := h.stores.Find(ctx, cmd.ID)
+	store, err := h.stores.Load(ctx, cmd.ID)
 	if err != nil{
 		return err
 	}
@@ -34,11 +30,7 @@ func (h EnableParticipationHandler) EnableParticipation(ctx context.Context, cmd
 		return err
 	}
 
-	if err = h.stores.Update(ctx, store); err != nil{
-		return err
-	}
-
-	if err = h.domainPublisher.Publish(ctx, store.GetEvents()...); err != nil{
+	if err = h.stores.Save(ctx, store); err != nil{
 		return err
 	}
 
