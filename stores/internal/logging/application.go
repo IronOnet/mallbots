@@ -31,6 +31,33 @@ func (a Application) CreateStore(ctx context.Context, cmd commands.CreateStore) 
 	return a.App.CreateStore(ctx, cmd)
 }
 
+
+func (a Application) RebrandStore(ctx context.Context, cmd commands.RebrandStore) (err error){
+	a.logger.Info().Msg("--> Stores.RebrandStore")
+	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.RebrandStore")}()
+	return a.App.RebrandStore(ctx, cmd)
+}
+
+
+func (a Application) RebrandProduct(ctx context.Context, cmd commands.RebrandProduct) (err error){
+	a.logger.Info().Msg("--> stores.RebrandProduct")
+	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.RebrandProduct")}()
+	return a.App.RebrandProduct(ctx, cmd)
+}
+
+func (a Application) IncreaseProductPrice(ctx context.Context, cmd commands.IncreaseProductPrice) (err error){
+	a.logger.Info().Msg("--> stores.IncreaseProductPrice")
+	defer func() { a.logger.Info().Err(err).Msg("<-- stores.IncreasedProductPrice")}()
+	return a.App.IncreaseProductPrice(ctx, cmd)
+}
+
+func (a Application) DecreaseProductPrice(ctx context.Context, cmd commands.DecreaseProductPrice) (err error){
+	a.logger.Info().Msg("--> stores.DecreaseProductPrice")
+	defer func() { a.logger.Info().Err(err).Msg("<-- stores.DecreaseProductPrice")}()
+	return a.App.DecreaseProductPrice(ctx, cmd)
+}
+
+
 func (a Application) EnableParticipation(ctx context.Context, cmd commands.EnableParticipation) (err error){
 	a.logger.Info().Msg("--> Stores.EnableParticipation")
 	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.EnableParticipation")}()
@@ -55,20 +82,20 @@ func (a Application) RemoveProduct(ctx context.Context, cmd commands.RemoveProdu
 	return a.App.RemoveProduct(ctx, cmd)
 }
 
-func (a Application) GetStore(ctx context.Context, query queries.GetStore) (store *domain.Store, err error){
+func (a Application) GetStore(ctx context.Context, query queries.GetStore) (store *domain.MallStore, err error){
 	a.logger.Info().Msg("--> Stores.GetStore")
 	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetStore")}()
 	return a.App.GetStore(ctx, query)
 }
 
-func (a Application) GetStores(ctx context.Context, query queries.GetStores) (stores []*domain.Store, err error){
+func (a Application) GetStores(ctx context.Context, query queries.GetStores) (stores []*domain.MallStore, err error){
 	a.logger.Info().Msg("--> Stores.GetStores")
 	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetStores")}()
 	return a.App.GetStores(ctx, query)
 }
 
 func (a Application) GetParticipatingStores(ctx context.Context, query queries.GetParticipatingStores,
-	) (store []*domain.Store,
+	) (store []*domain.MallStore,
 		err error,
 	) {
 		a.logger.Info().Msg("--> Stores.GetParticipatingStores")
@@ -76,13 +103,13 @@ func (a Application) GetParticipatingStores(ctx context.Context, query queries.G
 		return a.App.GetParticipatingStores(ctx, query)
 	}
 	
-	func (a Application) GetCatalog(ctx context.Context, query queries.GetCatalog) (products []*domain.Product, err error) {
+	func (a Application) GetCatalog(ctx context.Context, query queries.GetCatalog) (products []*domain.CatalogProduct, err error) {
 		a.logger.Info().Msg("--> Stores.GetCatalog")
 		defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetCatalog") }()
 		return a.App.GetCatalog(ctx, query)
 	}
 	
-	func (a Application) GetProduct(ctx context.Context, query queries.GetProduct) (product *domain.Product, err error) {
+	func (a Application) GetProduct(ctx context.Context, query queries.GetProduct) (product *domain.CatalogProduct, err error) {
 		a.logger.Info().Msg("--> Stores.GetProduct")
 		defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetProduct") }()
 		return a.App.GetProduct(ctx, query)
