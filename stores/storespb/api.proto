@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package storespb;
 
-import "messages.proto";
+import "messages_stores.proto";
 
 service StoresService{
     rpc CreateStore(CreateSotreRequest) returns (CreateStoreResponse){};

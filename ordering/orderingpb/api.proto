@@ -4,7 +4,7 @@ package orderingpb;
 
 option go_package="github.com/irononet/mallbots/ordering/orderingpb";
 
-import "messages.proto";
+import "orderingpb/messages_ordering.proto";
 
 service OrderingService{
     rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse){};

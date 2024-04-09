@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.27.1
 // 	protoc        v3.18.1
-// source: storespb/messages.proto
+// source: storespb/messages_stores.proto
 
 package storespb
 

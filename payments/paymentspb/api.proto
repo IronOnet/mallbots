@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package paymentspb;
 
-import "paymentspb/messages.proto";
+import "paymentspb/messages_payments.proto";
 
 service PaymentsService {
   rpc AuthorizePayment(AuthorizePaymentRequest) returns (AuthorizePaymentResponse) {};

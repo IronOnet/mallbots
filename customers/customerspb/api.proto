@@ -4,7 +4,7 @@ package customerspb;
 
 option go_package="customers/customerspb";
 
-import "messages.proto";
+import "customerspb/messages_customers.proto";
 
 
 

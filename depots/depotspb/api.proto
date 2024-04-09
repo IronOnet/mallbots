@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package depotspb;
 
-import "depotpb/messages.proto";
+import "depotpb/messages_depots.proto";
 
 service DepotService {
   rpc CreateShoppingList(CreateShoppingListRequest) returns (CreateShoppingListResponse) {}
