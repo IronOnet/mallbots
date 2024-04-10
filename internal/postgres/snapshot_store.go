@@ -102,5 +102,5 @@ func (s SnapshotStore) shouldSnapshot(aggregate es.EventSourcedAggregate) bool {
 }
 
 func (s SnapshotStore) table(query string) string{
-	return fmt.Sprintf(s.tableName, query)
+	return fmt.Sprintf(query, s.tableName)
 }

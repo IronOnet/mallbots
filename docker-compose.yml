@@ -17,7 +17,7 @@ services:
     command: ["./wait-for", "postgres:5432", "--", "/mallbots/monolith"]
   postgres:
     container_name: postgres
-    hostname: postgres
+    hostname: postgres:12-alpine
     image: postgres:latest
     restart: always
     environment:

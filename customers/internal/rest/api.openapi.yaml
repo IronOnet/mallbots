@@ -1,6 +1,6 @@
 openapiOptions:
   file:
-    - file: "customerspb/messages.proto"
+    - file: "customerspb/customers_messages.proto"
       option:
         info:
           title: Customers

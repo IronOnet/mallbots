@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --domain "$POSTGRES_DB" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
     CREATE DATABASE mallbots;
 
     CREATE USER mallbots_user WITH ENCRYPTED PASSWORD 'mallbots_pass';
@@ -10,7 +10,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --domain "$POSTGRES_DB" <<-E
 EOSQL
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "mallbots" <<-EOSQL
-    - Apply to keep modifications to the created_at column from being made
+    -- Apply to keep modifications to the created_at column from being made
     CREATE OR REPLACE FUNCTION created_at_trigger()
     RETURNS TRIGGER AS \$\$
     BEGIN
@@ -22,7 +22,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "mallbots" <<-EOSQL
     -- Apply to a table to automatically update update_at columns
     CREATE OR REPLACE FUNCTION updated_at_trigger()
     RETURNS TRIGGER AS \$\$
-    BEGING
+    BEGIN
         IF row(NEW.*) IS DISTINCT FROM row(OLD.*) THEN
             NEW.updated_at = NOW();
             RETURN NEW;

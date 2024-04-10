@@ -1,6 +1,6 @@
 openapiOptions:
   file:
-    - file: paymentspb/messages.proto
+    - file: paymentspb/payments_messages.proto
       option:
         info:
           title: Payments API
