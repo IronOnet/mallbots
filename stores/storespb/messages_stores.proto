@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package storespb;
 
-option go_package = "/storespb";
+//option go_package = "/storespb";
 
 message Store{
     string id = 1;
@@ -14,6 +14,7 @@ message Store{
 message Product{
     string id = 1;
     string store_id = 2;
+    string name = 3;
     string description = 4;
     string sku = 5;
     double price = 6;
