@@ -6,6 +6,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.12
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1
 	github.com/kelseyhightower/envconfig v1.4.0
+	github.com/nats-io/nats.go v1.34.1
 	github.com/rs/zerolog v1.32.0
 	github.com/stackus/dotenv v0.0.0-20221206033122-02295762494b
 	golang.org/x/sync v0.5.0
@@ -23,7 +24,6 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/klauspost/compress v1.17.2 // indirect
-	github.com/nats-io/nats.go v1.34.1 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	golang.org/x/crypto v0.20.0 // indirect
