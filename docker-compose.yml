@@ -13,6 +13,7 @@ services:
     env_file:
       - docker/.env
     depends_on:
+      - nats
       - postgres
     command: ["./wait-for", "postgres:5432", "--", "/mallbots/monolith"]
   postgres:

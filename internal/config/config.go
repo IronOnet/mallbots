@@ -19,7 +19,7 @@ type (
 
 	NatsConfig struct{
 		URL string `required:"true"`
-		Stream string `required:"mallbots"`
+		Stream string `default:"mallbots"`
 	}
 
 	AppConfig struct{

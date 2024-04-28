@@ -74,7 +74,7 @@ func (Module) Startup(ctx context.Context, mono monolith.Monolith) error {
 		return err
 	}
 	handlers.RegisterCatalogHandlers(catalogHandlers, domainDispatcher)
-	handlers.RegisterCatalogHandlers(mallHandlers, domainDispatcher)
+	handlers.RegisterMallHandlers(mallHandlers, domainDispatcher)
 	handlers.RegisterIntegrationEventHandlers(integrationEventHandlers, domainDispatcher)
 	return nil
 }
