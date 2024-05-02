@@ -24,6 +24,7 @@ import (
 	"github.com/irononet/mallbots/notifications"
 	"github.com/irononet/mallbots/ordering"
 	"github.com/irononet/mallbots/payments"
+	"github.com/irononet/mallbots/search"
 	"github.com/irononet/mallbots/stores"
 )
 
@@ -84,6 +85,7 @@ func run() (err error) {
 		&ordering.Module{},
 		&payments.Module{},
 		&stores.Module{},
+		&search.Module{},
 	}
 
 	if err = m.StartupModules(); err != nil {
