@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -26,6 +27,8 @@ type app struct {
 	mux     *chi.Mux
 	rpc     *grpc.Server
 	waiter  waiter.Waiter
+	nc *nats.Conn
+	js nats.JetStreamContext
 }
 
 func (a *app) Config() config.AppConfig {
@@ -46,6 +49,10 @@ func (a *app) Mux() *chi.Mux {
 
 func (a *app) RPC() *grpc.Server {
 	return a.rpc
+}
+
+func (a *app) JS() nats.JetStreamContext{
+	return a.js
 }
 
 func (a *app) Waiter() waiter.Waiter {
@@ -123,5 +130,24 @@ func (a *app) waitForRpc(ctx context.Context) error {
 		}
 	})
 
+	return group.Wait()
+}
+
+func (a *app) waitForStream(ctx context.Context) error{
+	closed := make(chan struct{})
+	a.nc.SetClosedHandler(func(*nats.Conn){
+		close(closed)
+	})
+	group, gCtx := errgroup.WithContext(ctx)
+	group.Go(func() error{
+		fmt.Println("message stream started")
+		defer fmt.Println("message stream stopped")
+		<-closed
+		return nil
+	})
+	group.Go(func() error{
+		<-gCtx.Done()
+		return a.nc.Drain()
+	})
 	return group.Wait()
 }

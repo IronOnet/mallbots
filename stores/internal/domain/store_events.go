@@ -1,7 +1,7 @@
 package domain
 
 const (
-	StoreCreatedEvent = "stores.StoeCreated"
+	StoreCreatedEvent = "stores.StoreCreated"
 	StoreParticipationEnabledEvent = "stores.StoreParticipationEnabled"
 	StoreParticipationDisabledEvent = "stores.StoreParticipationDisabled"
 	StoreRebrandedEvent = "stores.StoreRebranded"

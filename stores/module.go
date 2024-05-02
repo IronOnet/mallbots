@@ -16,6 +16,8 @@ import (
 	"github.com/irononet/mallbots/stores/internal/logging"
 	"github.com/irononet/mallbots/stores/internal/postgres"
 	"github.com/irononet/mallbots/stores/internal/rest"
+	"github.com/irononet/mallbots/internal/jetstream"
+	"github.com/irononet/mallbots/internal/am"
 )
 
 type Module struct{}
@@ -26,6 +28,7 @@ func (Module) Startup(ctx context.Context, mono monolith.Monolith) error {
 	if err != nil{
 		return err
 	}
+	eventStream := am.NewEventStream(reg, jetstream.NewStream(mono.Config().Nats.Stream, mono.JS()))
 	domainDispatcher := ddd.NewEventDispatcher[ddd.AggregateEvent]()
 	aggregateStore := es.AggregateStoreWithMiddleware(
 		pg.NewEventStore("stores.events", mono.DB(), reg),
@@ -55,6 +58,11 @@ func (Module) Startup(ctx context.Context, mono monolith.Monolith) error {
 		"Mall", mono.Logger(),
 	)
 
+	integrationEventHandlers := logging.LogEventHandlerAccess[ddd.AggregateEvent](
+		application.NewIntegrationEventHandlers(eventStream),
+		"IntegrationEvents", mono.Logger(),
+	)
+
 	// setup driver adapters
 	if err := grpc.RegisterServer(ctx, app, mono.RPC()); err != nil {
 		return err
@@ -66,8 +74,8 @@ func (Module) Startup(ctx context.Context, mono monolith.Monolith) error {
 		return err
 	}
 	handlers.RegisterCatalogHandlers(catalogHandlers, domainDispatcher)
-	handlers.RegisterCatalogHandlers(mallHandlers, domainDispatcher)
-
+	handlers.RegisterMallHandlers(mallHandlers, domainDispatcher)
+	handlers.RegisterIntegrationEventHandlers(integrationEventHandlers, domainDispatcher)
 	return nil
 }
 

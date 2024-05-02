@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package storespb;
 
-import "messages_stores.proto";
+import "storespb/messages_stores.proto";
 
 service StoresService{
-    rpc CreateStore(CreateSotreRequest) returns (CreateStoreResponse){};
+    rpc CreateStore(CreateStoreRequest) returns (CreateStoreResponse){};
     rpc GetStore(GetStoreRequest) returns (GetStoreResponse){};
     rpc GetStores(GetStoresRequest) returns (GetStoresResponse){};
     rpc EnableParticipation(EnableParticipationRequest) returns (EnableParticipationResponse){};
@@ -14,7 +14,35 @@ service StoresService{
     rpc AddProduct(AddProductRequest) returns (AddProductResponse){};
     rpc RemoveProduct(RemoveProductRequest) returns (RemoveProductResponse){};
     rpc GetCatalog(GetCatalogRequest) returns (GetCatalogResponse){};
+
+    rpc RebrandProduct(RebrandProductRequest) returns (RebrandProductResponse) {};
+    rpc IncreaseProductPrice(IncreaseProductPriceRequest) returns (IncreaseProductPriceResponse) {};
+    rpc GetProduct(GetProductRequest) returns (GetProductResponse) {};
+    rpc RebrandStore(RebrandStoreRequest) returns (RebrandStoreResponse) {};
+    rpc DecreaseProductPrice(DecreaseProductPriceRequest) returns (DecreaseProductPriceResponse){};
 }
+
+
+message IncreaseProductPriceRequest{
+    string id = 1;
+    double price = 2;
+}
+
+message IncreaseProductPriceResponse{}
+
+message DecreaseProductPriceRequest{
+    string id = 1;
+    double price = 2;
+}
+
+message DecreaseProductPriceResponse{}
+
+message RebrandStoreRequest{
+    string id = 1;
+    string name = 2;
+}
+
+message RebrandStoreResponse{}
 
 message CreateStoreRequest{
     string name = 1;
@@ -42,6 +70,8 @@ message GetStoresResponse{
 message EnableParticipationRequest{
     string id = 1;
 }
+
+message EnableParticipationResponse{}
 
 message DisableParticipationRequest{
     string id = 1;
@@ -73,7 +103,7 @@ message RemoveProductRequest{
 
 message RemoveProductResponse{}
 
-message GetCatalogueRequest{
+message GetCatalogRequest{
     string store_id = 1;
 }
 
@@ -88,3 +118,11 @@ message GetProductRequest{
 message GetProductResponse{
     Product product = 1;
 }
+
+message RebrandProductRequest{
+    string id = 1;
+    string name = 2;
+    string description = 3;
+}
+
+message RebrandProductResponse{}

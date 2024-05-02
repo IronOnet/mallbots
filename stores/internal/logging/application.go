@@ -103,15 +103,15 @@ func (a Application) GetParticipatingStores(ctx context.Context, query queries.G
 		return a.App.GetParticipatingStores(ctx, query)
 	}
 	
-	func (a Application) GetCatalog(ctx context.Context, query queries.GetCatalog) (products []*domain.CatalogProduct, err error) {
-		a.logger.Info().Msg("--> Stores.GetCatalog")
-		defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetCatalog") }()
-		return a.App.GetCatalog(ctx, query)
-	}
+func (a Application) GetCatalog(ctx context.Context, query queries.GetCatalog) (products []*domain.CatalogProduct, err error) {
+	a.logger.Info().Msg("--> Stores.GetCatalog")
+	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetCatalog") }()
+	return a.App.GetCatalog(ctx, query)
+}
 	
-	func (a Application) GetProduct(ctx context.Context, query queries.GetProduct) (product *domain.CatalogProduct, err error) {
-		a.logger.Info().Msg("--> Stores.GetProduct")
-		defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetProduct") }()
-		return a.App.GetProduct(ctx, query)
-	}
+func (a Application) GetProduct(ctx context.Context, query queries.GetProduct) (product *domain.CatalogProduct, err error) {
+	a.logger.Info().Msg("--> Stores.GetProduct")
+	defer func() { a.logger.Info().Err(err).Msg("<-- Stores.GetProduct") }()
+	return a.App.GetProduct(ctx, query)
+}
 	

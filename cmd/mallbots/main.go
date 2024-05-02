@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
@@ -23,6 +24,7 @@ import (
 	"github.com/irononet/mallbots/notifications"
 	"github.com/irononet/mallbots/ordering"
 	"github.com/irononet/mallbots/payments"
+	"github.com/irononet/mallbots/search"
 	"github.com/irononet/mallbots/stores"
 )
 
@@ -54,6 +56,18 @@ func run() (err error) {
 			return
 		}
 	}(m.db)
+	// init nats and jetstream
+	m.nc, err = nats.Connect(cfg.Nats.URL)
+	if err != nil{
+		return err
+	}
+	defer m.nc.Close()
+
+	m.js, err = initJetstream(cfg.Nats, m.nc)
+	if err != nil{
+		return err
+
+	}
 	m.logger = logger.New(logger.LogConfig{
 		Environment: cfg.Environment,
 		LogLevel:    logger.Level(cfg.LogLevel),
@@ -71,6 +85,7 @@ func run() (err error) {
 		&ordering.Module{},
 		&payments.Module{},
 		&stores.Module{},
+		&search.Module{},
 	}
 
 	if err = m.StartupModules(); err != nil {
@@ -86,6 +101,7 @@ func run() (err error) {
 	m.waiter.Add(
 		m.waitForWeb,
 		m.waitForRpc,
+		m.waitForStream,
 	)
 
 	return m.waiter.Wait()
@@ -100,4 +116,18 @@ func initRpc(_ rpc.RpcConfig) *grpc.Server {
 
 func initMux(_ web.WebConfig) *chi.Mux {
 	return chi.NewMux()
+}
+
+func initJetstream(cfg config.NatsConfig, nc *nats.Conn) (nats.JetStreamContext, error){
+	js, err := nc.JetStream()
+	if err != nil{
+		return nil, err
+	}
+
+	_, err = js.AddStream(&nats.StreamConfig{
+		Name: cfg.Stream,
+		Subjects: []string{fmt.Sprintf("%s.>", cfg.Stream)},
+	})
+
+	return js, err
 }

@@ -42,7 +42,7 @@ func NewEventStore(tableName string, db *sql.DB, registry registry.Registry) Eve
 }
 
 func (s EventStore) Load(ctx context.Context, aggregate es.EventSourcedAggregate) (err error) {
-	const query = `SELECT stream_version, event_id, event_name, event_date, occurred_at FROM %s WHERE stream_id = $1 AND stream_name = $2 AND stream_version > $3 ORDER BY stream_version ASC`
+	const query = `SELECT stream_version, event_id, event_name, event_data, occurred_at FROM %s WHERE stream_id = $1 AND stream_name = $2 AND stream_version > $3 ORDER BY stream_version ASC`
 
 	aggregateID := aggregate.ID()
 	aggregateName := aggregate.AggregateName()
