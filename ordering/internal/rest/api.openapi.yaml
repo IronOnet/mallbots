@@ -1,6 +1,6 @@
 openapiOptions:
   file:
-    - file: "orderingpb/ordering_messages.proto"
+    - file: "orderingpb/api.proto"
       option:
         info:
           title: Order Processing
